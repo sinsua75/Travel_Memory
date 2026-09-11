@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Memory</title>
+
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/card.css">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="header-inner">
+
+            <a href="./index.html" class="logo">
+                <span class="logo-icon">◉</span>
+                <span>Travel Memory</span>
+            </a>
+
+            <nav class="nav">
+
+                <a href="./index.html" class="nav-item active">
+                    <span class="nav-icon">⌂</span>
+                    <span>홈</span>
+                </a>
+
+                <a href="#album" class="nav-item">
+                    <span class="nav-icon">▣</span>
+                    <span>목록</span>
+                </a>
+
+                <a href="#favorite" class="nav-item">
+                    <span class="nav-icon">♡</span>
+                    <span>즐겨찾기</span>
+                </a>
+
+                <a href="#lp" class="nav-item">
+                    <span class="nav-icon">◔</span>
+                    <span>LP</span>
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-bg"></div>
+
+            <div class="hero-content">
+
+                <div class="play-status">
+                    <span class="status-dot"></span>
+                    지금 재생 중
+                </div>
+
+                <p class="country-code">JP</p>
+
+                <h1>일본 · 도쿄</h1>
+
+                <p class="hero-description">
+                    LP 레코드판을 재생하듯, 여행을 음반으로 기억합니다.
+                    <br>
+                    지금은 <strong>Lemon</strong> — Kenshi Yonezu
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button class="play-btn">
+                        <span>◉</span>
+                        여행 재생하기
+                    </button>
+
+                    <a href="#album" class="all-travel-btn">
+                        <span>▣</span>
+                        모든 여행 보기
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="content">
+
+            <section class="stats">
+
+                <article class="stat-card">
+                    <span class="stat-icon">◉</span>
+                    <strong>5</strong>
+                    <p>전체 기록</p>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-icon">✓</span>
+                    <strong>2</strong>
+                    <p>다녀온 여행</p>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-icon">□</span>
+                    <strong>3</strong>
+                    <p>예정 여행</p>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-icon">♡</span>
+                    <strong>2</strong>
+                    <p>즐겨찾기</p>
+                </article>
+
+            </section>
+
+
+            <section class="album" id="album">
+
+                <div class="album-top">
+
+                    <div>
+                        <h2>내 여행 음반</h2>
+                        <p>각 여행을 하나의 레코드판처럼 기억해요</p>
+                    </div>
+
+                    <a href="#" class="album-all-btn">
+                        전체 보기 →
+                    </a>
+
+                </div>
+
+
+                <div class="card-list">
+
+                    <article class="travel-card active-card">
+
+                        <img src="./images/tokyo.jpg" alt="일본 도쿄">
+
+                        <div class="card-gradient"></div>
+
+                        <div class="card-text">
+                            <span>JP</span>
+                            <strong>도쿄</strong>
+                        </div>
+
+                    </article>
+
+
+                    <article class="travel-card">
+
+                        <img src="./images/paris.jpg" alt="프랑스 파리">
+
+                        <div class="card-gradient"></div>
+
+                        <div class="card-text">
+                            <span>FR</span>
+                            <strong>파리</strong>
+                        </div>
+
+                    </article>
+
+
+                    <article class="travel-card">
+
+                        <img src="./images/rome.jpg" alt="이탈리아 로마">
+
+                        <div class="card-gradient"></div>
+
+                        <div class="card-text">
+                            <span>IT</span>
+                            <strong>로마</strong>
+                        </div>
+
+                    </article>
+
+
+                    <article class="travel-card">
+
+                        <img src="./images/london.jpg" alt="영국 런던">
+
+                        <div class="card-gradient"></div>
+
+                        <div class="card-text">
+                            <span>GB</span>
+                            <strong>런던</strong>
+                        </div>
+
+                    </article>
+
+
+                    <article class="travel-card">
+
+                        <img src="./images/barcelona.jpg" alt="스페인 바르셀로나">
+
+                        <div class="card-gradient"></div>
+
+                        <div class="card-text">
+                            <span>ES</span>
+                            <strong>바르셀로나</strong>
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <footer class="footer">
+        Travel Memory © 2026 · 여행은 음반처럼, 오래 남는 기억으로
+    </footer>
+
+</body>
+
+</html>
