@@ -51,7 +51,327 @@
     </header>
 
 
-    <main>
+    <main class="list-page">
+
+        <section class="page-title">
+
+            <div>
+                <h1>여행 목록</h1>
+                <p>총 5개의 여행 기록 중 5개를 보여드려요</p>
+            </div>
+
+            <button class="add-btn">
+                + 여행 추가
+            </button>
+
+        </section>
+
+
+        <section class="filter-area">
+
+            <div class="search-box">
+                <input type="text" placeholder="도시, 국가, 노래로 검색">
+            </div>
+
+            <div class="filter">
+
+                <select>
+                    <option>전체 국가</option>
+                    <option>일본</option>
+                    <option>프랑스</option>
+                    <option>이탈리아</option>
+                    <option>영국</option>
+                    <option>스페인</option>
+                </select>
+
+                <div class="status-filter">
+                    <button class="active">전체</button>
+                    <button>방문 완료</button>
+                    <button>예정</button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="travel-list">
+
+            <article class="travel-item">
+
+                <div class="travel-image">
+
+                    <img src="./images/tokyo.jpg" alt="일본 도쿄">
+
+                    <span class="visit-badge">
+                        ✓ 방문 완료
+                    </span>
+
+                    <button class="favorite-btn">
+                        ♥
+                    </button>
+
+                    <div class="image-info">
+                        <span>JP 일본</span>
+                    </div>
+
+                </div>
+
+
+                <div class="travel-info">
+
+                    <div class="travel-name">
+                        <h2>도쿄</h2>
+
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+                    </div>
+
+                    <p class="music">
+                        ♫ Lemon · Kenshi Yonezu
+                    </p>
+
+                    <p class="memo">
+                        벚꽃길을 걸으면서 듣고 싶은 노래
+                    </p>
+
+                    <div class="travel-bottom">
+
+                        <span class="date">
+                            2026.03.14
+                        </span>
+
+                        <div class="item-buttons">
+                            <button>✎</button>
+                            <button>♧</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="travel-item">
+
+                <div class="travel-image">
+
+                    <img src="./images/paris.jpg" alt="프랑스 파리">
+
+                    <button class="favorite-btn">
+                        ♡
+                    </button>
+
+                    <div class="image-info">
+                        <span>FR 프랑스</span>
+                    </div>
+
+                </div>
+
+
+                <div class="travel-info">
+
+                    <div class="travel-name">
+                        <h2>파리</h2>
+
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+                    </div>
+
+                    <p class="music">
+                        ♫ La Vie En Rose · Édith Piaf
+                    </p>
+
+                    <p class="memo">
+                        몽마르트 언덕에서 바라보는 노을
+                    </p>
+
+                    <div class="travel-bottom">
+
+                        <span class="date">
+                            2026.07.02
+                        </span>
+
+                        <div class="item-buttons">
+                            <button>✎</button>
+                            <button>♧</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="travel-item">
+
+                <div class="travel-image">
+
+                    <img src="./images/rome.jpg" alt="이탈리아 로마">
+
+                    <button class="favorite-btn">
+                        ♡
+                    </button>
+
+                    <div class="image-info">
+                        <span>IT 이탈리아</span>
+                    </div>
+
+                </div>
+
+
+                <div class="travel-info">
+
+                    <div class="travel-name">
+                        <h2>로마</h2>
+
+                        <div class="rating">
+                            ★★★★☆
+                        </div>
+                    </div>
+
+                    <p class="music">
+                        ♫ Nessun Dorma · Andrea Bocelli
+                    </p>
+
+                    <p class="memo">
+                        트레비 분수 앞에서 소원을 빌며
+                    </p>
+
+                    <div class="travel-bottom">
+
+                        <span class="date">
+                            2026.09.20
+                        </span>
+
+                        <div class="item-buttons">
+                            <button>✎</button>
+                            <button>♧</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="travel-item">
+
+                <div class="travel-image">
+
+                    <img src="./images/london.jpg" alt="영국 런던">
+
+                    <span class="visit-badge">
+                        ✓ 방문 완료
+                    </span>
+
+                    <button class="favorite-btn">
+                        ♥
+                    </button>
+
+                    <div class="image-info">
+                        <span>GB 영국</span>
+                    </div>
+
+                </div>
+
+
+                <div class="travel-info">
+
+                    <div class="travel-name">
+                        <h2>런던</h2>
+
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+
+                    </div>
+
+                    <p class="music">
+                        ♫ Yellow · Coldplay
+                    </p>
+
+                    <p class="memo">
+                        비 오는 센트럴 런던의 붉은 공중전화
+                    </p>
+
+                    <div class="travel-bottom">
+
+                        <span class="date">
+                            2025.12.08
+                        </span>
+
+                        <div class="item-buttons">
+                            <button>✎</button>
+                            <button>♧</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="travel-item">
+
+                <div class="travel-image">
+
+                    <img src="./images/barcelona.jpg" alt="스페인 바르셀로나">
+
+                    <button class="favorite-btn">
+                        ♡
+                    </button>
+
+                    <div class="image-info">
+                        <span>ES 스페인</span>
+                    </div>
+
+                </div>
+
+
+                <div class="travel-info">
+
+                    <div class="travel-name">
+                        <h2>바르셀로나</h2>
+
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+
+                    </div>
+
+                    <p class="music">
+                        ♫ Barcelona · Freddie Mercury
+                    </p>
+
+                    <p class="memo">
+                        고딕지구 골목에서 만난 타파스와 플라멩코
+                    </p>
+
+                    <div class="travel-bottom">
+
+                        <span class="date">
+                            2027.01.15
+                        </span>
+
+                        <div class="item-buttons">
+                            <button>✎</button>
+                            <button>♧</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </section>
 
     </main>
 
