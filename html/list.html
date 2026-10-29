@@ -14,6 +14,8 @@
 </head>
 
 <body>
+    <script src="../js/storage.js" defer></script>
+    <script src="../js/crud.js" defer></script>
 
     <header class="header">
 
@@ -62,7 +64,7 @@
                 <p>총 5개의 여행 기록 중 5개를 보여드려요</p>
             </div>
 
-            <button class="add-btn">
+            <button class="add-btn" id="addTravelBtn">
                 + 여행 추가
             </button>
 
@@ -97,7 +99,7 @@
         </section>
 
 
-        <section class="travel-list">
+        <section class="travel-list" id="travelList">
 
             <article class="travel-item">
 
@@ -323,9 +325,6 @@
         </div>
 
     </div>
-
-    <script src="../config.js"></script>
-    <script src="../js/api/image.js"></script>
 </body>
 
 </html>
