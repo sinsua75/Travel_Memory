@@ -56,7 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     submitBtn.addEventListener("click", createTravel);
 
+    submitBtn.addEventListener("click", createTravel);
 
+    document.getElementById("searchInput")
+        .addEventListener("input", renderTravels);
+
+    document.getElementById("sortSelect")
+        .addEventListener("change", renderTravels);
     renderTravels();
 
 });
@@ -149,30 +155,30 @@ function createTravel() {
 
 }
 
-
 function renderTravels() {
+    const travelList = document.getElementById("travelList");
+    const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+    const sort = document.getElementById("sortSelect").value;
 
-    const travelList =
-        document.getElementById("travelList");
+    const travels = loadCards().filter(travel =>
+        (travel.country || "").toLowerCase().includes(keyword) ||
+        (travel.city || "").toLowerCase().includes(keyword)
+    );
 
-
-    const travels = loadCards();
-
+    travels.sort((a, b) => {
+        if (sort === "newest") return b.id - a.id;
+        if (sort === "oldest") return a.id - b.id;
+        if (sort === "rating") return b.rating - a.rating;
+        if (sort === "date") return (a.date || "9999").localeCompare(b.date || "9999");
+        return 0;
+    });
 
     travelList.innerHTML = "";
 
-
     travels.forEach(travel => {
-
-        const card =
-            createTravelCard(travel);
-
-        travelList.appendChild(card);
-
+        travelList.appendChild(createTravelCard(travel));
     });
-
 }
-
 
 function createTravelCard(travel) {
 

@@ -74,18 +74,16 @@
         <section class="filter-area">
 
             <div class="search-box">
-                <input type="text" placeholder="도시, 국가, 노래로 검색">
+                <input type="text" id="searchInput" placeholder="도시, 국가, 노래로 검색">
             </div>
 
             <div class="filter">
 
-                <select>
-                    <option>전체 국가</option>
-                    <option>일본</option>
-                    <option>프랑스</option>
-                    <option>이탈리아</option>
-                    <option>영국</option>
-                    <option>스페인</option>
+                <select id="sortSelect">
+                    <option value="newest">최신순</option>
+                    <option value="oldest">오래된순</option>
+                    <option value="rating">별점순</option>
+                    <option value="date">예정일순</option>
                 </select>
 
                 <div class="status-filter">
