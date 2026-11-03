@@ -647,3 +647,62 @@
     }
 
 }
+
+.detail-review {
+    margin-bottom: 20px;
+}
+
+.detail-review strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.detail-review textarea {
+    width: 100%;
+    height: 75px;
+    box-sizing: border-box;
+    padding: 10px;
+
+    border: 1px solid #383838;
+    border-radius: 7px;
+
+    background: #292929;
+    color: #fff;
+
+    resize: none;
+}
+
+.review-rating {
+    display: flex;
+    gap: 3px;
+    margin: 8px 0;
+}
+
+.review-rating button {
+    border: 0;
+    padding: 0;
+
+    background: transparent;
+    color: #555;
+
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.review-rating button.active {
+    color: #ffc21c;
+}
+
+#saveReview {
+    padding: 8px 14px;
+
+    border: 0;
+    border-radius: 6px;
+
+    background: #fff;
+    color: #111;
+
+    cursor: pointer;
+}

@@ -355,6 +355,10 @@
     color: #fff;
 }
 
+.share-btn {
+    color: #22d3a5 !important;
+}
+
 
 .favorite-list {
     grid-template-columns:
@@ -772,4 +776,18 @@
         margin-top: 30px;
     }
 
+}
+
+.review-preview {
+    margin-bottom: 10px;
+    color: #ffc21c;
+    font-size: 10px;
+}
+
+.review-preview p:last-child {
+    margin-top: 4px;
+    color: #bbb;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

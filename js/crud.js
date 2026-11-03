@@ -1,6 +1,6 @@
 let selectedRating = 5;
 
-
+let selectedReviewRating = 0;
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = document.getElementById("travelModal");
@@ -53,9 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-
-    submitBtn.addEventListener("click", createTravel);
-
     submitBtn.addEventListener("click", createTravel);
 
     document.getElementById("searchInput")
@@ -63,6 +60,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("sortSelect")
         .addEventListener("change", renderTravels);
+
+    // 후기 별점 선택
+    document.querySelectorAll("#reviewRating button")
+        .forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                selectedReviewRating =
+                    Number(button.dataset.rating);
+
+                updateReviewRating();
+
+            });
+
+        });
+
+    // 후기 저장
+    document.getElementById("saveReview")
+        .addEventListener("click", saveReview);
     renderTravels();
 
 });
@@ -248,6 +264,14 @@ function createTravelCard(travel) {
                 ${travel.memo}
             </p>
 
+            ${travel.visited && (travel.reviewMemo || travel.reviewRating) ? `
+                <div class="review-preview">
+                    <p>
+                        후기 ${"★".repeat(travel.reviewRating || 0)}
+                    </p>
+                    <p>${travel.reviewMemo || ""}</p>
+                </div>
+            ` : ""}
 
             <div class="travel-bottom">
 
@@ -261,8 +285,8 @@ function createTravelCard(travel) {
                         ✎
                     </button>
 
-                    <button>
-                        ♧
+                    <button class="share-btn">
+                        ↗
                     </button>
 
                 </div>
@@ -273,7 +297,15 @@ function createTravelCard(travel) {
 
     `;
 
+    // 카드 공유
+    article.querySelector(".share-btn")
+        .addEventListener("click", (e) => {
 
+            e.stopPropagation();
+
+            shareTravelCard(article, travel);
+
+        });
     return article;
 
 }
@@ -350,7 +382,17 @@ function openDetail(travel) {
     visited.style.display =
         travel.visited ? "block" : "none";
 
+    // 방문 완료한 여행에만 후기 표시
+    document.getElementById("detailReview").style.display =
+        travel.visited ? "block" : "none";
 
+    // 기존 후기 불러오기
+    document.getElementById("reviewMemo").value =
+        travel.reviewMemo || "";
+
+    selectedReviewRating = travel.reviewRating || 0;
+
+    updateReviewRating();
     document.getElementById("deleteTravel").dataset.id =
         travel.id;
 
@@ -406,3 +448,96 @@ document
         }
 
     });
+
+function updateReviewRating() {
+
+    document.querySelectorAll("#reviewRating button")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                Number(button.dataset.rating) <= selectedReviewRating
+            );
+
+        });
+
+}
+
+
+function saveReview() {
+
+    const id = Number(
+        document.getElementById("deleteTravel").dataset.id
+    );
+
+    const reviewMemo =
+        document.getElementById("reviewMemo").value;
+
+    updateTravel(id, {
+        reviewMemo: reviewMemo,
+        reviewRating: selectedReviewRating
+    });
+
+    alert("후기가 저장되었습니다.");
+
+    renderTravels();
+
+}
+
+async function shareTravelCard(article, travel) {
+
+    const canvas = await html2canvas(article, {
+        scale: 2,
+        backgroundColor: "#202124",
+        useCORS: true
+    });
+
+    canvas.toBlob(async (blob) => {
+
+        if (!blob) {
+            alert("이미지 생성에 실패했습니다.");
+            return;
+        }
+
+        const file = new File(
+            [blob],
+            `${travel.city}_travel.png`,
+            { type: "image/png" }
+        );
+
+        // 이미지 공유 지원 여부 확인
+        if (
+            navigator.canShare &&
+            navigator.canShare({ files: [file] })
+        ) {
+
+            try {
+
+                await navigator.share({
+                    title: `${travel.country} ${travel.city}`,
+                    files: [file]
+                });
+
+            } catch (error) {
+
+                if (error.name !== "AbortError") {
+                    console.error(error);
+                }
+
+            }
+
+        } else {
+
+            // 공유 미지원 환경에서는 이미지 다운로드
+            const link = document.createElement("a");
+
+            link.download = file.name;
+            link.href = canvas.toDataURL("image/png");
+
+            link.click();
+
+        }
+
+    }, "image/png");
+
+}
