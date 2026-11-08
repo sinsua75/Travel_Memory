@@ -12,3 +12,37 @@ function loadCards(){
 function saveCards(cards){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
 }
+
+function addCards(card) {
+
+    const cards = loadCards();
+
+    cards.push(card);
+
+    saveCards(cards);
+}
+
+//테스트 할때 쓰려고 임시로 만듬 UD
+function deleteTravel(id) {
+
+    const travels = loadCards();
+
+    const newTravels = travels.filter(
+        travel => travel.id !== id
+    );
+
+    saveCards(newTravels);
+}
+
+function updateTravel(id, updatedData) {
+
+    const travels = loadCards();
+
+    const newTravels = travels.map(travel =>
+        travel.id === id
+            ? { ...travel, ...updatedData }
+            : travel
+    );
+
+    saveCards(newTravels);
+}
