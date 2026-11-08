@@ -1,6 +1,8 @@
 async function getCountries(countryName) {
     try {
-        const response = await fetch(`https://restcountries.com/v3.1/name/${countryName}`);
+        const response = await fetch(`https://api.restcountries.com/countries/v5/names.common?q=${countryName}`, {
+            headers: { Authorization: `Bearer ${RESTCOUNTRIES_API_KEY}` }
+        });
         if(!response.ok){
             throw new Error('국가 정보를 찾을 수 없습니다');
         }
