@@ -1,6 +1,8 @@
 let selectedRating = 5;
-
+let selectedMusic = null;
+let editingTravelId = null;
 let selectedReviewRating = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = document.getElementById("travelModal");
@@ -54,6 +56,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     submitBtn.addEventListener("click", createTravel);
+    // 음악 검색
+    document.getElementById("searchMusicBtn")
+        .addEventListener("click", searchMusic);
+
+    // 엔터로 검색
+    document.getElementById("musicSearch")
+        .addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                searchMusic();
+            }
+        });
 
     document.getElementById("searchInput")
         .addEventListener("input", renderTravels);
@@ -104,6 +118,92 @@ function updateRating() {
 
 }
 
+async function searchMusic() {
+
+    const keyword =
+        document.getElementById("musicSearch").value.trim();
+
+    const resultsBox =
+        document.getElementById("musicSearchResults");
+
+    if (!keyword) {
+        alert("노래 제목이나 아티스트를 입력해주세요.");
+        return;
+    }
+
+    resultsBox.textContent = "음악 검색 중...";
+
+    try {
+
+        const response = await fetch(
+            `https://itunes.apple.com/search?term=${encodeURIComponent(keyword)}&media=music&entity=song&limit=10`
+        );
+
+        const data = await response.json();
+
+        resultsBox.innerHTML = "";
+
+        if (!data.results.length) {
+            resultsBox.textContent = "검색 결과가 없습니다.";
+            return;
+        }
+
+        data.results.forEach(music => {
+
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.className = "music-result";
+
+            const image = document.createElement("img");
+            image.src = music.artworkUrl100;
+            image.alt = "";
+
+            const info = document.createElement("span");
+            info.textContent =
+                `${music.trackName} · ${music.artistName}`;
+
+            button.append(image, info);
+
+            button.addEventListener("click", () => {
+
+                selectedMusic = {
+                    song: music.trackName,
+                    artist: music.artistName,
+                    previewUrl: music.previewUrl,
+                    trackViewUrl: music.trackViewUrl,
+                    artworkUrl: music.artworkUrl100
+                };
+
+                document.getElementById("song").value =
+                    music.trackName;
+
+                document.getElementById("artist").value =
+                    music.artistName;
+
+                const selected =
+                    document.getElementById("selectedMusic");
+
+                selected.textContent =
+                    `♫ ${music.trackName} · ${music.artistName}`;
+
+                resultsBox.innerHTML = "";
+
+            });
+
+            resultsBox.appendChild(button);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        resultsBox.textContent =
+            "음악 검색에 실패했습니다.";
+
+    }
+}
 
 function createTravel() {
 
@@ -138,36 +238,49 @@ function createTravel() {
     }
 
 
-    const travel = {
-
-        id: Date.now(),
+    const travelData = {
 
         country: country,
-
         city: city,
-
         date: date,
-
         song: song,
-
         artist: artist,
 
+        previewUrl: selectedMusic?.previewUrl || "",
+        trackViewUrl: selectedMusic?.trackViewUrl || "",
+        artworkUrl: selectedMusic?.artworkUrl || "",
+
         memo: memo,
-
         rating: selectedRating,
-
         visited: visited
 
     };
 
+    // 수정 모드라면 기존 여행 갱신
+    if (editingTravelId !== null) {
 
-    addCards(travel);
+        updateTravel(Number(editingTravelId), travelData);
+
+        editingTravelId = null;
+
+    } else {
+
+        // 일반 모드라면 새 여행 추가
+        addCards({
+            id: Date.now(),
+            ...travelData
+        });
+
+    }
 
     renderTravels();
 
     closeModal();
 
     resetForm();
+
+    document.getElementById("submitTravel").textContent =
+        "◉　버킷리스트에 추가";
 
 }
 
@@ -281,8 +394,12 @@ function createTravelCard(travel) {
 
                 <div class="item-buttons">
 
-                    <button>
+                    <button class="edit-button" type="button">
                         ✎
+                    </button>
+
+                    <button class="lp-card-btn" type="button" aria-label="음악 재생" title="LP 재생">
+                        ▶
                     </button>
 
                     <button class="share-btn">
@@ -296,6 +413,20 @@ function createTravelCard(travel) {
         </div>
 
     `;
+
+    article.querySelector(".lp-card-btn")
+        .addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            location.href =
+                `./lp.html?id=${encodeURIComponent(travel.id)}`;
+        });
+
+    article.querySelector(".edit-button")
+        .addEventListener("click", (e) => {
+            e.stopPropagation();
+            openDetail(travel);
+        });
 
     // 카드 공유
     article.querySelector(".share-btn")
@@ -337,10 +468,20 @@ function resetForm() {
 
     document.getElementById("visited").checked = false;
 
+    selectedMusic = null;
+
+    document.getElementById("musicSearch").value = "";
+
+    document.getElementById("musicSearchResults").innerHTML = "";
+
+    document.getElementById("selectedMusic").textContent =
+        "선택된 음악이 없습니다.";
 
     selectedRating = 5;
 
     updateRating();
+
+
 
 }
 
@@ -396,6 +537,55 @@ function openDetail(travel) {
     document.getElementById("deleteTravel").dataset.id =
         travel.id;
 
+    // 여행 수정 버튼
+    const editButton =
+        document.querySelector("#detailModal .edit-button");
+
+    editButton.onclick = (e) => {
+
+        e.stopPropagation();
+
+        // 수정할 여행 ID 저장
+        editingTravelId = travel.id;
+
+        // 기존 정보 입력
+        document.getElementById("country").value = travel.country;
+        document.getElementById("city").value = travel.city;
+        document.getElementById("date").value = travel.date || "";
+        document.getElementById("song").value = travel.song || "";
+        document.getElementById("artist").value = travel.artist || "";
+        document.getElementById("memo").value = travel.memo || "";
+        document.getElementById("visited").checked = travel.visited;
+
+        // 기존 별점 반영
+        selectedRating = travel.rating || 5;
+        updateRating();
+
+        // 기존 음악 정보 유지
+        selectedMusic = {
+            previewUrl: travel.previewUrl || "",
+            trackViewUrl: travel.trackViewUrl || "",
+            artworkUrl: travel.artworkUrl || ""
+        };
+
+        document.getElementById("selectedMusic").textContent =
+            travel.song
+                ? `♫ ${travel.song} · ${travel.artist}`
+                : "선택된 음악이 없습니다.";
+
+        // 상세 모달 닫기
+        document.getElementById("detailModal")
+            .classList.remove("show");
+
+        // 수정 모달 열기
+        document.getElementById("travelModal")
+            .classList.add("show");
+    };
+
+    document.querySelector("#playTravelLp .lp-button").onclick = () => {
+        location.href =
+            `./lp.html?id=${encodeURIComponent(travel.id)}`;
+    };
 
     modal.classList.add("show");
 

@@ -204,7 +204,7 @@
 
                 </div>
 
-                <div class="detail-buttons">
+                <div class="detail-buttons" id="playTravelLp" type="button">
 
                     <button class="lp-button">
                         ◉ LP 재생
@@ -275,24 +275,28 @@
 
                 </div>
 
+                <div class="music-search-area">
 
-                <div class="input-row">
+                    <label>여행에 어울리는 음악 선택</label>
 
-                    <div>
-                        <label>노래 검색</label>
+                    <div class="music-search-row">
+                        <input type="text" id="musicSearch" placeholder="노래 제목 또는 아티스트 검색">
 
-                        <input type="text" id="song" placeholder="곡 제목">
+                        <button type="button" id="searchMusicBtn">
+                            검색
+                        </button>
                     </div>
 
+                    <div id="musicSearchResults" class="music-results"></div>
 
-                    <div>
-                        <label>아티스트</label>
-
-                        <input type="text" id="artist" placeholder="아티스트명">
+                    <div class="selected-music" id="selectedMusic">
+                        <span>선택된 음악이 없습니다.</span>
                     </div>
+
+                    <input type="hidden" id="song">
+                    <input type="hidden" id="artist">
 
                 </div>
-
 
                 <label>
                     메모

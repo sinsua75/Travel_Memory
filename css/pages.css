@@ -791,3 +791,104 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/* LP 플레이어 음악 재생 */
+
+.music-message {
+    margin-top: 8px;
+    color: #8eaaa0;
+    font-size: 10px;
+    text-align: center;
+}
+
+.record.spinning {
+    animation: lp-spin 5s linear infinite;
+}
+
+@keyframes lp-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.play-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.apple-music-link {
+    margin-top: 15px;
+    color: #22d3a5;
+    font-size: 11px;
+}
+
+.lp-card-btn {
+    color: #22d3a5 !important;
+    cursor: pointer;
+}
+
+/* 음악 검색 */
+
+.music-search-area {
+    margin-bottom: 20px;
+}
+
+.music-search-row {
+    display: flex;
+    gap: 8px;
+}
+
+.music-search-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+.music-search-row button {
+    padding: 0 18px;
+    border: 0;
+    border-radius: 5px;
+    background: #22d3a5;
+    color: #111;
+    cursor: pointer;
+}
+
+.music-results {
+    max-height: 220px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+.music-result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 8px;
+    border: 0;
+    border-bottom: 1px solid #333;
+    background: #202124;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.music-result:hover {
+    background: #303136;
+}
+
+.music-result img {
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.selected-music {
+    margin-top: 10px;
+    color: #22d3a5;
+    font-size: 12px;
+}
