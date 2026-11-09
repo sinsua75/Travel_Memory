@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const travel = travels.find(
         item => String(item.id) === String(travelId)
-    ) || travels[0];
+    ) || travels[travels.length - 1];
 
     const message = document.getElementById("musicMessage");
 

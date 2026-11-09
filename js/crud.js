@@ -319,7 +319,12 @@ function renderTravels() {
     travels.forEach(travel => {
         travelList.appendChild(createTravelCard(travel));
     });
+
+
+    document.getElementById("travelCount").textContent =
+        `총 ${loadCards().length}개의 여행 기록 중 ${travels.length}개를 보여드려요`;
 }
+
 
 // 카드 1장의 HTML을 만들고 ▶ ✎ ↗ ♡ 버튼 이벤트를 연결한다
 function createTravelCard(travel) {
