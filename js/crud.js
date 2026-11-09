@@ -39,8 +39,8 @@ function updateCard(id, updatedCard){
 }
 
 let selectedRating = 5;
-
 let selectedReviewRating = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = document.getElementById("travelModal");
@@ -255,22 +255,16 @@ async function createTravel() {
     const imageUrl = await getImage(`${country} ${city}`);
 
 
-    const travel = {
-
-        id: Date.now(),
+    const travelData = {
 
         country: country,
-
         city: city,
-
         date: date,
-
         song: song,
-
         artist: artist,
 
-        memo: memo,
 
+        memo: memo,
         rating: selectedRating,
 
         visited: visited,
@@ -284,7 +278,12 @@ async function createTravel() {
     };
 
 
-    addCards(travel);
+        // 일반 모드라면 새 여행 추가
+        addCards({
+            id: Date.now(),
+            ...travelData
+        });
+
 
     renderTravels();
 
@@ -420,6 +419,10 @@ function createTravelCard(travel) {
                         ✎
                     </button>
 
+                    <button class="lp-card-btn" type="button" aria-label="음악 재생" title="LP 재생">
+                        ◉
+                    </button>
+
                     <button class="share-btn">
                         ↗
                     </button>
@@ -470,6 +473,12 @@ function createTravelCard(travel) {
          updatePreviewImage();      
         document.getElementById("travelModal").classList.add("show");
     });
+
+    article.querySelector(".lp-card-btn")
+        .addEventListener("click", (e) => {
+            e.stopPropagation();
+            location.href = `./lp.html?id=${travel.id}`;
+        });
 
     // 카드 공유
     article.querySelector(".share-btn") // class 중에 찾으라고 .
@@ -524,7 +533,6 @@ function resetForm() {
     document.getElementById("memo").value = "";
 
     document.getElementById("visited").checked = false;
-
 
     selectedRating = 5;
 
@@ -588,9 +596,13 @@ function openDetail(travel) {
     document.getElementById("deleteTravel").dataset.id =
         travel.id;
 
+
     document.getElementById("detailImage").style.backgroundImage =
         `linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.05)), url("${travel.imageUrl}")`;
 
+    document.querySelector("#playTravelLp .lp-button").onclick = () => {     // ① LP 버튼의 class
+        location.href = `./lp.html?id=${travel.id}`;                   // ② 카드 id
+    };
 
     const favBtn = document.getElementById("detailFavorite");
     favBtn.textContent = travel.favorite ? "❤" : "♡";

@@ -53,123 +53,76 @@
 
 
     <main class="player-page">
-
         <section class="player-area">
 
             <div class="player-top">
-
-                <a href="#" class="back-btn">
-                    ← 목록으로
-                </a>
-
-                <span class="playing">
-                    지금 재생 중
-                </span>
-
-                <button class="player-favorite">
-                    ♥
-                </button>
-
+                <a href="./list.html" class="back-btn">← 목록으로</a>
+                <span class="playing" id="playStatus">음악 준비 중</span>
             </div>
-
 
             <div class="player-content">
 
                 <article class="player-card">
-
                     <div class="player-image">
-
-                        <img src="./images/tokyo.jpg" alt="일본 도쿄">
-
+                        <img id="travelImage" src="" alt="여행 이미지">
                     </div>
 
                     <div class="player-info">
-
-                        <div>
-                            <strong>JP 일본 · 도쿄</strong>
-                        </div>
-
-                        <div class="rating">
-                            ★★★★★
-                        </div>
-
-                        <p>
-                            벚꽃길을 걸으면서 듣고 싶은 노래
-                        </p>
-
+                        <strong id="travelLocation"></strong>
+                        <div class="rating" id="travelRating"></div>
+                        <p id="travelMemo"></p>
                     </div>
-
                 </article>
-
 
                 <section class="music-player">
 
-                    <div class="record">
-
+                    <div class="record" id="recordDisc">
                         <div class="record-center">
-                            <span>JP</span>
-                            <span>도쿄</span>
+                            <span id="recordCountry">LP</span>
+                            <span id="recordCity">PLAYER</span>
                         </div>
-
                     </div>
-
 
                     <div class="song-info">
-
-                        <h2>Lemon</h2>
-                        <p>Kenshi Yonezu</p>
-
+                        <h2 id="songTitle">곡 제목</h2>
+                        <p id="songArtist">아티스트</p>
+                        <p id="musicMessage"></p>
                     </div>
-
 
                     <div class="progress-area">
-
-                        <span>0:42</span>
-
-                        <input type="range" min="0" max="100" value="17">
-
-                        <span>4:16</span>
-
+                        <span id="currentTime">0:00</span>
+                        <input type="range" id="progress" min="0" max="100" value="0">
+                        <span id="duration">0:00</span>
                     </div>
-
 
                     <div class="player-controls">
+                        <button class="play-button" id="playButton" type="button" disabled>▶</button>
 
-                        <button class="music-favorite">
-                            ♥
-                        </button>
-
-                        <button class="play-button">
-                            ❚❚
-                        </button>
-
-                        <button class="next-button">
-                            ✓
-                        </button>
-
+                        <button class="next-button" id="restartButton" type="button">↺</button>
                     </div>
+
+                    <audio id="audioPlayer" preload="metadata"></audio>
+
+                    <a id="openMusicLink" href="#" target="_blank" hidden>
+                        음악 서비스에서 열기 ↗
+                    </a>
 
                 </section>
 
             </div>
 
-
             <section class="travel-memo">
-
                 <span>▣ 여행 메모</span>
-
-                <p>
-                    벚꽃길을 걸으면서 듣고 싶은 노래
-                </p>
-
+                <p id="memoText"></p>
             </section>
 
         </section>
-
     </main>
 
 
-<script src = "../config.js"></script>
+    <script src="../config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/api/music.js"></script>
 </body>
 
 </html>
