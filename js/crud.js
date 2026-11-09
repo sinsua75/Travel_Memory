@@ -225,6 +225,13 @@ async function createTravel() {
 
     // 수정 모드: 새 카드를 만들지 않고 해당 카드만 업데이트한 뒤 return으로 끝낸다
     if(editingId !== null){
+        const oldCard = loadCards().find(c => c.id === editingId);   // 수정 전 카드 찾기
+
+        let newImageUrl = oldCard.imageUrl;                            // 기본은 기존 사진 유지
+
+        if (oldCard.country !== country || oldCard.city !== city) {    // 도시 키
+            newImageUrl = await getImage(`${country} ${city}`) || "../assets/images/default.jpg";
+        }
         updateCard(editingId, {
             country: country,
             city: city,
@@ -234,7 +241,8 @@ async function createTravel() {
             memo: memo,
             rating: selectedRating,
             visited: visited,
-            previewUrl: selectedPreviewUrl
+            previewUrl: selectedPreviewUrl,
+            imageUrl: newImageUrl
         });
 
         editingId = null;
