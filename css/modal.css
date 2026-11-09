@@ -99,7 +99,7 @@
         linear-gradient(to top,
             rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 0.05)),
-        url("../images/default.jpg");
+        url("../assets/images/default.jpg");
 
     background-size: cover;
     background-position: center;
@@ -404,7 +404,7 @@
         linear-gradient(to top,
             rgba(0, 0, 0, 0.85),
             rgba(0, 0, 0, 0.05)),
-        url("../images/default.jpg");
+        url("../assets/images/default.jpg");
 
     background-size: cover;
     background-position: center;
@@ -705,4 +705,70 @@
     color: #111;
 
     cursor: pointer;
+}
+.input-row > div {
+    min-width: 0;                 /* 두 칸 폭이 같아지게 */
+}
+
+.song-input-wrap {
+    display: flex;
+    height: 44px;
+    margin-bottom: 15px;
+    border: 1px solid #383838;
+    border-radius: 7px;
+    background: #292929;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.song-input-wrap:focus-within {
+    border-color: #666;           /* 입력 중일 때 테두리 */
+}
+
+.song-input-wrap input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    border: none;                 /* 테두리는 바깥 상자가 가짐 */
+    border-radius: 0;
+    background: transparent;
+}
+
+#songSearchBtn {
+    width: 46px;
+    border: none;
+    border-left: 1px solid #383838;   /* 돋보기와 입력칸을 나누는 선 */
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#songSearchBtn:hover {
+    background: #333;
+}
+
+.songResults {
+    max-height: 240px;
+    overflow-y: auto;
+    margin-top: 8px;
+    background: #2a2a2a;
+    border-radius: 12px;
+}
+
+.songResults div {
+    color: #fff;
+    font-size: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #3a3a3a;
+    cursor: pointer;
+}
+
+.songResults div:last-child {
+    border-bottom: none;
+}
+
+.songResults div:hover {
+    background: #3a3a3a;
 }

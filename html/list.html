@@ -16,8 +16,13 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 
+    <script src="../js/api/countries.js" defer></script>
+    <script src="../config.js" defer></script>
     <script src="../js/storage.js" defer></script>
+    <script src = "../js/filter.js" defer></script>
     <script src="../js/crud.js" defer></script>
+    
+    
 
     <header class="header">
 
@@ -89,9 +94,10 @@
                 </select>
 
                 <div class="status-filter">
-                    <button class="active">전체</button>
-                    <button>방문 완료</button>
-                    <button>예정</button>
+                    <button class="active" data-status="all">전체</button>
+                    <button data-status="visited">방문 완료</button>
+                    <button data-status="pending">예정</button>
+                    <button data-status="favorite">즐겨찾기</button>
                 </div>
 
             </div>
@@ -113,14 +119,14 @@
 
         <div class="detail-modal">
 
-            <div class="detail-image">
+            <div class="detail-image" id = "detailImage">
 
                 <button class="detail-close" id="detailClose">
                     ×
                 </button>
 
-                <button class="detail-favorite">
-                    ♥
+                <button class="detail-favorite" id="detailFavorite">
+                    ♡
                 </button>
 
                 <div class="detail-title">
@@ -215,7 +221,7 @@
                     </button>
 
                     <button class="delete-button" id="deleteTravel">
-                        ▣
+                        ▣ 삭제
                     </button>
 
                 </div>
@@ -246,8 +252,8 @@
 
             <div class="modal-body">
 
-                <div class="modal-image">
-                    <span>🌍　국가를 입력하세요</span>
+                <div class="modal-image" id = "modalImage">
+                    <span id="modalImageText">🌍　국가를 입력하세요</span>
                 </div>
 
 
@@ -279,9 +285,15 @@
                 <div class="input-row">
 
                     <div>
+                        
                         <label>노래 검색</label>
 
-                        <input type="text" id="song" placeholder="곡 제목">
+                        <div class = "song-input-wrap">
+                            <input type="text" id="song" placeholder="곡 제목" autocomplete="off">
+                            <button type = "button" id = "songSearchBtn"> ⌕ </button>
+
+                        </div>
+                        
                     </div>
 
 
@@ -292,6 +304,8 @@
                     </div>
 
                 </div>
+
+                <div id = "songResults" class = "songResults"></div>
 
 
                 <label>

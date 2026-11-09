@@ -1,9 +1,28 @@
+let currentStatus = "all";  // 지금 선택된 상태 필터 (all / visited / pending / favorite)
+let selectedPreviewUrl = ""; // 노래 검색에서 고른 30초 미리듣기 주소
+let currentAudio = null; // 지금 재생 중인 오디오 (새로 틀기 전에 멈추려고 기억)
+let editingId = null; // 수정 중인 카드 id (null이면 새로 추가하는 중)
+
+
+document.querySelectorAll(".status-filter button").forEach(button => {
+    button.addEventListener("click", () => {
+        currentStatus = button.dataset.status;
+        document.querySelectorAll(".status-filter button").forEach(btn => {
+            btn.classList.remove("active");
+        });
+        button.classList.add("active");
+        renderTravels();
+    });
+});
+
+// 지울 id가 아닌 카드만 filter로 남겨서 다시 저장한다
 function deleteCard(id) {
     const cards = loadCards();
     const newDeleteCardArr = cards.filter(card => card.id !== id);
     saveCards(newDeleteCardArr);
 }
 
+// map으로 카드를 돌면서 id가 같은 카드만 새 값을 합쳐서(...) 덮어쓴다. 나머지는 그대로
 function updateCard(id, updatedCard){
     const cards = loadCards();
     const newUpdateCardArr = cards.map(card => {
@@ -16,6 +35,9 @@ function updateCard(id, updatedCard){
         return card;
     });
     saveCards(newUpdateCardArr);
+
+}
+
 let selectedRating = 5;
 
 let selectedReviewRating = 0;
@@ -42,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     closeBtn.addEventListener("click", () => {
 
-        modal.classList.remove("show");
+        closeModal();
 
     });
 
@@ -51,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (e.target === modal) {
 
-            modal.classList.remove("show");
+            closeModal();
 
         }
 
@@ -72,6 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     submitBtn.addEventListener("click", createTravel);
+
+    document.getElementById("city")
+    .addEventListener("blur", updatePreviewImage);
+document.getElementById("country")
+    .addEventListener("blur", updatePreviewImage);
 
     document.getElementById("searchInput")
         .addEventListener("input", renderTravels);
@@ -94,12 +121,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
 
+        document.getElementById("songSearchBtn")
+        .addEventListener("click", async () => {
+            const keyword = document.getElementById("song").value.trim();
+
+            const musics = await getMusic(keyword);
+
+            const box = document.getElementById("songResults");
+            box.innerHTML = "";
+
+            musics.forEach(music => {
+                const item = document.createElement("div");
+                item.textContent = music.trackName + " - " + music.artistName;
+
+                item.addEventListener("click", () => {
+                    document.getElementById("song").value = music.trackName;
+                    document.getElementById("artist").value = music.artistName;
+                    selectedPreviewUrl = music.previewUrl;
+                    box.innerHTML = "";
+                });
+                box.appendChild(item);
+            });
+        });
+
     // 후기 저장
     document.getElementById("saveReview")
         .addEventListener("click", saveReview);
     renderTravels();
 
 });
+
+// 모달 위쪽 사진 미리보기. API 호출이 느려서 입력 중이 아니라 칸을 벗어날 때(blur)만 실행
+async function updatePreviewImage() {
+    const country = document.getElementById("country").value.trim();
+    const city = document.getElementById("city").value.trim();
+
+    if (!country || !city) return;               // 둘 중 하나라도 비어 있으면 아무것도 안 함
+
+    const url = await getImage(`${country} ${city}`);     // ① 검색어: 국가 + 도시
+
+    if (url) {
+        document.getElementById("modalImage").style.backgroundImage =
+            `linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.05)), url("${url}")`;   // ② 받아온 주소
+    }
+    
+
+    document.getElementById("modalImageText").textContent = `🌍　${country} · ${city}`;
+}
 
 
 function updateRating() {
@@ -122,8 +190,8 @@ function updateRating() {
 
 }
 
-
-function createTravel() {
+// 사진 검색(getImage)을 기다려야 해서 async/await 사용
+async function createTravel() {
 
     const country =
         document.getElementById("country").value;
@@ -155,6 +223,29 @@ function createTravel() {
 
     }
 
+    // 수정 모드: 새 카드를 만들지 않고 해당 카드만 업데이트한 뒤 return으로 끝낸다
+    if(editingId !== null){
+        updateCard(editingId, {
+            country: country,
+            city: city,
+            date: date,
+            song: song,
+            artist: artist,
+            memo: memo,
+            rating: selectedRating,
+            visited: visited,
+            previewUrl: selectedPreviewUrl
+        });
+
+        editingId = null;
+        renderTravels();
+        closeModal();
+        resetForm();
+        selectedPreviewUrl = "";
+        return;
+    }
+    const imageUrl = await getImage(`${country} ${city}`);
+
 
     const travel = {
 
@@ -174,7 +265,13 @@ function createTravel() {
 
         rating: selectedRating,
 
-        visited: visited
+        visited: visited,
+
+        imageUrl: imageUrl || "../assets/images/default.jpg",
+
+        previewUrl: selectedPreviewUrl || "",
+
+        favorite: false
 
     };
 
@@ -187,14 +284,17 @@ function createTravel() {
 
     resetForm();
 
+    selectedPreviewUrl = "";
+
 }
 
+// 상태 필터 → 검색어 → 정렬 순서로 거른 뒤 카드를 화면에 다시 그린다
 function renderTravels() {
     const travelList = document.getElementById("travelList");
     const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
     const sort = document.getElementById("sortSelect").value;
 
-    const travels = loadCards().filter(travel =>
+    const travels = filterCards(loadCards(), currentStatus).filter(travel =>
         (travel.country || "").toLowerCase().includes(keyword) ||
         (travel.city || "").toLowerCase().includes(keyword)
     );
@@ -214,6 +314,7 @@ function renderTravels() {
     });
 }
 
+// 카드 1장의 HTML을 만들고 ▶ ✎ ↗ ♡ 버튼 이벤트를 연결한다
 function createTravelCard(travel) {
 
     const article =
@@ -238,8 +339,9 @@ function createTravelCard(travel) {
         <div class="travel-image">
 
             <img
-                src="./images/default.jpg"
+                src="${travel.imageUrl}"
                 alt="${travel.country} ${travel.city}"
+                referrerpolicy="no-referrer"
             >
 
             ${travel.visited
@@ -250,7 +352,8 @@ function createTravelCard(travel) {
         }
 
             <button class="favorite-btn">
-                ♡
+                
+                ${travel.favorite ? "❤" : "♡"}
             </button>
 
             <div class="image-info">
@@ -299,7 +402,13 @@ function createTravelCard(travel) {
 
                 <div class="item-buttons">
 
-                    <button>
+                    ${travel.previewUrl ? `
+                        <button class="preview-btn" data-preview="${travel.previewUrl}">
+                            ▶
+                        </button>
+                    ` : ""}
+
+                    <button class ="edit-btn">
                         ✎
                     </button>
 
@@ -315,13 +424,64 @@ function createTravelCard(travel) {
 
     `;
 
+    const previewBtn = article.querySelector(".preview-btn");
+
+    if(previewBtn) {
+        previewBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            if(currentAudio) {
+                // 이전 오디오를 멈춰서 소리가 겹치지 않게 한다
+                currentAudio.pause();
+            }
+
+            currentAudio = new Audio(travel.previewUrl);
+            currentAudio.play();
+        });
+    }
+
+    const editBtn = article.querySelector(".edit-btn");
+
+    editBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        editingId = travel.id;
+
+        document.getElementById("country").value = travel.country;
+        document.getElementById("city").value = travel.city;
+        document.getElementById("date").value = travel.date;
+        document.getElementById("song").value = travel.song;
+        document.getElementById("artist").value = travel.artist;
+        document.getElementById("memo").value = travel.memo;
+        document.getElementById("visited").checked = travel.visited;
+
+        selectedRating = travel.rating;
+        updateRating();
+        selectedPreviewUrl = travel.previewUrl || "";
+
+         updatePreviewImage();      
+        document.getElementById("travelModal").classList.add("show");
+    });
+
     // 카드 공유
-    article.querySelector(".share-btn")
+    article.querySelector(".share-btn") // class 중에 찾으라고 .
         .addEventListener("click", (e) => {
 
             e.stopPropagation();
 
             shareTravelCard(article, travel);
+            
+        });
+
+    article.querySelector(".favorite-btn")
+        .addEventListener("click", (e) => {
+
+            e.stopPropagation();
+
+            updateCard(travel.id, { favorite: !travel.favorite });
+
+            renderTravels();
+
 
         });
     return article;
@@ -335,6 +495,8 @@ function closeModal() {
         document.getElementById("travelModal");
 
     modal.classList.remove("show");
+
+    editingId = null; // 모달을 닫으면 수정 모드도 해제한다
 
 }
 
@@ -360,8 +522,12 @@ function resetForm() {
 
     updateRating();
 
+     document.getElementById("modalImage").style.backgroundImage = "";
+    document.getElementById("modalImageText").textContent = "🌍　국가를 입력하세요";  
+
 }
 
+// 카드를 누르면 그 카드의 값으로 상세 팝업을 채운다
 function openDetail(travel) {
 
     const modal =
@@ -414,7 +580,13 @@ function openDetail(travel) {
     document.getElementById("deleteTravel").dataset.id =
         travel.id;
 
+    document.getElementById("detailImage").style.backgroundImage =
+        `linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.05)), url("${travel.imageUrl}")`;
 
+
+    const favBtn = document.getElementById("detailFavorite");
+    favBtn.textContent = travel.favorite ? "❤" : "♡";
+    favBtn.dataset.id = travel.id;          // 카드 id
     modal.classList.add("show");
 
 }
@@ -435,7 +607,7 @@ document
             return;
         }
 
-        deleteTravel(id);
+        deleteCard(id);
 
         document
             .getElementById("detailModal")
@@ -443,6 +615,19 @@ document
 
         renderTravels();
 
+    });
+
+    document.getElementById("detailFavorite")
+    .addEventListener("click", (e) => {
+        e.stopPropagation();
+
+
+        const id = Number(e.currentTarget.dataset.id);  
+        const card = loadCards().find(c => c.id === id); 
+        updateCard(id, { favorite: !card.favorite });             
+
+        e.currentTarget.textContent = card.favorite ? "♡" : "❤";
+        renderTravels();
     });
 
 document
@@ -491,7 +676,7 @@ function saveReview() {
     const reviewMemo =
         document.getElementById("reviewMemo").value;
 
-    updateTravel(id, {
+    updateCard(id, {
         reviewMemo: reviewMemo,
         reviewRating: selectedReviewRating
     });
